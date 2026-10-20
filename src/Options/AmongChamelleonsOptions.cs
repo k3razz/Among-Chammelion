@@ -1,5 +1,5 @@
-using MiraAPI.Options;
-using MiraAPI.Options.Attributes;
+using MiraAPI.GameOptions;
+using MiraAPI.GameOptions.Attributes;
 
 namespace AmongChamelleons.Options;
 
