@@ -52,17 +52,29 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore ./src/AmongChamelleons.csproj
 
+      - name: Inspect MiraAPI package (diagnostic)
+        run: |
+          echo "=== MiraAPI package contents ==="
+          find ~/.nuget/packages/allofus.miraapi -name "*.dll" 2>/dev/null || echo "MiraAPI package folder not found"
+          echo "=== Listing types via strings (rough) ==="
+          DLL=$(find ~/.nuget/packages/allofus.miraapi -name "AllOfUs.MiraAPI.dll" 2>/dev/null | head -1)
+          if [ -n "$DLL" ]; then
+            strings "$DLL" | grep -E "IMiraPlugin|AbstractOptionGroup|ModdedToggleOption" | sort -u | head -30
+          else
+            echo "AllOfUs.MiraAPI.dll not found"
+          fi
+
       - name: Build
         run: dotnet build ./src/AmongChamelleons.csproj -c Release --no-restore
 
-      - name: Verify output DLL
+      - name: Verify DLL
         run: |
           if ! find ./src/bin/Release -maxdepth 2 -type f -name 'AmongChamelleons.dll' | grep -q .; then
             echo "No AmongChamelleons.dll found in build output"
             exit 1
           fi
 
-      - name: Publish GitHub Release
+      - name: Publish Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ inputs.release_tag }}
