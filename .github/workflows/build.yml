@@ -52,17 +52,13 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore ./src/AmongChamelleons.csproj
 
-      - name: Inspect MiraAPI package (diagnostic)
+      - name: Inspect MiraAPI types
         run: |
-          echo "=== MiraAPI package contents ==="
-          find ~/.nuget/packages/allofus.miraapi -name "*.dll" 2>/dev/null || echo "MiraAPI package folder not found"
-          echo "=== Listing types via strings (rough) ==="
-          DLL=$(find ~/.nuget/packages/allofus.miraapi -name "AllOfUs.MiraAPI.dll" 2>/dev/null | head -1)
-          if [ -n "$DLL" ]; then
-            strings "$DLL" | grep -E "IMiraPlugin|AbstractOptionGroup|ModdedToggleOption" | sort -u | head -30
-          else
-            echo "AllOfUs.MiraAPI.dll not found"
-          fi
+            DLL=$(find ~/.nuget/packages/allofus.miraapi -name "MiraAPI.dll" | head -1)
+            echo "DLL: $DLL"
+            if [ -n "$DLL" ]; then
+            strings "$DLL" | grep -E "IMiraPlugin|AbstractOptionGroup|ModdedToggleOption|Options|PluginInterfaces" | sort -u | head -40
+            fi
 
       - name: Build
         run: dotnet build ./src/AmongChamelleons.csproj -c Release --no-restore
