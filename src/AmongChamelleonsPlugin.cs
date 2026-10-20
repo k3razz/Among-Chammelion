@@ -1,5 +1,6 @@
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
+using BepInEx.Logging;
 using HarmonyLib;
 using MiraAPI;
 using MiraAPI.PluginInterfaces;
@@ -20,9 +21,7 @@ public partial class AmongChamelleonsPlugin : BasePlugin, IMiraPlugin
     {
         Log = base.Log;
         Plugin = this;
-
         Harmony.PatchAll();
-
-        Log.LogInfo($"AmongChamelleons v0.1 BETA loaded.");
+        Log.LogInfo("AmongChamelleons v0.1 BETA loaded.");
     }
 }
