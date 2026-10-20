@@ -10,7 +10,7 @@ using Reactor;
 namespace AmongChamelleons;
 
 [BepInAutoPlugin]
-[BepInProcess("AmongUs.exe")]
+//[BepInProcess("AmongUs.exe")] <-- disabled due to filters
 [BepInDependency(MiraApiPlugin.Id)]
 [BepInDependency(ReactorPlugin.Id)]
 public partial class AmongChamelleonsPlugin : BasePlugin, IMiraPlugin
