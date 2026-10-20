@@ -1,0 +1,76 @@
+name: Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_name:
+        description: "Continuous Build"
+        required: true
+        type: string
+        default: "Continuous Build"
+
+      release_tag:
+        description: "RL"
+        required: true
+        type: string
+        default: "RL"
+
+      release_description:
+        description: "Описание релиза"
+        required: true
+        type: string
+        default: "Build of the AmongChamelleons BepInEx plugin."
+
+      prerelease:
+        description: "Это предварительный релиз?"
+        required: true
+        type: boolean
+        default: false
+
+      draft:
+        description: "Создать как черновик?"
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore ./src/AmongChamelleons.csproj
+
+      - name: Build
+        run: dotnet build ./src/AmongChamelleons.csproj -c Release --no-restore
+
+      - name: Verify output DLL
+        run: |
+          if ! find ./src/bin/Release -maxdepth 2 -type f -name 'AmongChamelleons.dll' | grep -q .; then
+            echo "No AmongChamelleons.dll found in build output"
+            exit 1
+          fi
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.release_tag }}
+          name: ${{ inputs.release_name }}
+          body: ${{ inputs.release_description }}
+          prerelease: ${{ inputs.prerelease }}
+          draft: ${{ inputs.draft }}
+          files: |
+            src/bin/Release/net6.0/AmongChamelleons.dll
+          fail_on_unmatched_files: true
+          overwrite_files: true
