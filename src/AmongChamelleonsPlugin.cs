@@ -3,7 +3,7 @@ using BepInEx.Unity.IL2CPP;
 using BepInEx.Logging;
 using HarmonyLib;
 using MiraAPI;
-using MiraAPI.PluginInterfaces;
+using MiraAPI.PluginLoading;
 
 namespace AmongChamelleons;
 
@@ -16,6 +16,9 @@ public partial class AmongChamelleonsPlugin : BasePlugin, IMiraPlugin
     public Harmony Harmony { get; } = new(Id);
     public static AmongChamelleonsPlugin Plugin;
     public new static ManualLogSource Log;
+
+    public string OptionsTitleText { get; } = "AmongChamelleons";
+    public string CustomOptionMenuNameTwo { get; } = "AmongChamelleons Options";
 
     public override void Load()
     {
