@@ -1,16 +1,18 @@
 using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
 using BepInEx.Logging;
 using HarmonyLib;
 using MiraAPI;
 using MiraAPI.PluginLoading;
+using Reactor;
 
 namespace AmongChamelleons;
 
 [BepInAutoPlugin]
 [BepInProcess("AmongUs.exe")]
 [BepInDependency(MiraApiPlugin.Id)]
-[BepInDependency(Reactor.ReactorPlugin.Id)]
+[BepInDependency(ReactorPlugin.Id)]
 public partial class AmongChamelleonsPlugin : BasePlugin, IMiraPlugin
 {
     public Harmony Harmony { get; } = new(Id);
@@ -19,6 +21,8 @@ public partial class AmongChamelleonsPlugin : BasePlugin, IMiraPlugin
 
     public string OptionsTitleText { get; } = "AmongChamelleons";
     public string CustomOptionMenuNameTwo { get; } = "AmongChamelleons Options";
+
+    public ConfigFile GetConfigFile() => Config;
 
     public override void Load()
     {
